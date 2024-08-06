@@ -1,0 +1,23 @@
+{
+    "name": "react-native-smart-search",
+    "version": "0.0.1",
+    "description": "A smart search box with an optional filter dropdown. Support both iOS/Android devices",
+    "main": "index.js",
+    "scripts": {},
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/bhagyeshjain/react-native-smart-search.git"
+    },
+    "author": "Bhagyesh Jain <bhagyesh.chhabra@gmail.com> (https://github.com/bhagyeshjain)",
+    "license": "MIT",
+    "keywords": [
+      "react-native",
+      "ios",
+      "android",
+      "search-box",
+      "smart-search",
+      "search-with-filter",
+      "criteria-search"
+    ],
+    "dependencies": {}
+  }
