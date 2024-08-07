@@ -1,7 +1,7 @@
 {
     "name": "react-native-smart-search",
-    "version": "0.0.1",
-    "description": "A smart search box with an optional filter dropdown. Support both iOS/Android devices",
+    "version": "0.0.2",
+    "description": "A smart search box component that provides a user-friendly UI with a variety of features and animations.",
     "main": "index.js",
     "scripts": {},
     "repository": {
