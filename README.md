@@ -16,6 +16,7 @@ This component includes functionalities such as search input, filter options, an
 |isExpanded|Boolean|FALSE|Option to set the expanded property of the search box. Always TRUE if `isCollapsible = FALSE`. If TRUE, the search box wil be displayed in expanded form by default.|
 
 ### INSTALLATION
+---
 ```
 npm install react-native-smart-search
 ```
