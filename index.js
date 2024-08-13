@@ -79,6 +79,7 @@ const SmartSearchBox = ({placeHolder, onSearch, filterOptions, onChangeFilterOpt
    */
   const clearInput = () => {
     setText('');
+    onSearch('');
   };
 
   /**
