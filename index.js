@@ -1,3 +1,14 @@
+/**
+ * @module SmartSearchBox
+ *
+ * This module exports a `SmartSearchBox` component designed for React Native applications.
+ * The component provides an advanced search input with a range of features to enhance user
+ * search experiences. It includes capabilities such as filtering,
+ * and customizable styling, making it suitable for a variety of search use cases.
+ * 
+ * @author Bhagyesh Jain [bhagyesh.chhabra@gmail.com]
+ * @author Dilip Thakar [dilipthakkarnew@gmail.com]
+ */
 import React, {useState, useRef} from 'react';
 import {
   View,
@@ -17,19 +28,45 @@ import cancel from "./assets/cancel.png";
 
 /**
  * 
- * @param {placeHolder} Placeholder text
- * @param {onSearch}  
- * @param {filterOptions}  
- * @param {onChangeFilterOption}  
- * @param {isExpanded}
- * @param {isCollapsible}
- * @returns JSX search component with filter dropdown
- * @author Bhagyesh Jain
+ * A Smart Search Box component that provides a user-friendly UI with a variety of features and animations.
+ * 
+ * This component includes functionalities such as search input, filter options, and customizable behaviors
+ * like expansion and collapsibility. It is designed to enhance the search experience in React Native applications.
+ * 
+ * @component
+ * @param {string} placeholder - The placeholder text displayed in the input box.
+ * @param {function(string): void} onSearch - Callback function that is triggered when a search is performed. 
+ *   Receives the updated value of the input text.
+ * @param {Object[]} filterOptions - An array of filter options to be displayed alongside the search box. 
+ *   Each option should be an object with properties like `label` and `value`.
+ * @param {function(Object): void} onChangeFilterOption - Callback function that is triggered when the filter option is changed.
+ *   Receives the selected filter option object.
+ * @param {function(): void} onSubmit - Callback function that is triggered when the user presses enter or clicks the search button.
+ * @param {boolean} [isExpanded=false] - Boolean indicating if the search box should be expanded by default.
+ * @param {boolean} [isCollapsible=true] - Boolean indicating if the search box can be collapsed or not.
+ * 
+ * @returns {JSX.Element} The rendered SmartSearchBox component.
  */
 const SmartSearchBox = ({placeHolder, onSearch, filterOptions, onChangeFilterOption, onSubmit, isExpanded, isCollapsible = true}) => {
+  
+  // State to store the value of input box
   const [text, setText] = useState('');
+
+  // State to store the expansion state of the component
   const [expand, setExpand] = useState(!isCollapsible || isExpanded || false);
 
+  // Reference of the animated width property
+  const animatedWidth = useRef(
+    new Animated.Value(expand ? Dimensions.get('window').width * 0.9 : 40),
+  ).current;
+
+  // Reference of the input box
+  const inputRef = useRef(null);
+
+  /**
+   * Toggles the expansion state and animates the width of the component.
+   * If currently expanded, it collapses the component and vice versa.
+   */
   const handleToggleExpand = () => {
     const isExpanded = expand;
     focusInput();
@@ -37,19 +74,31 @@ const SmartSearchBox = ({placeHolder, onSearch, filterOptions, onChangeFilterOpt
     setExpand(!isExpanded);
   };
 
+  /**
+   * Clears the input field by setting the text state to an empty string
+   */
   const clearInput = () => {
     setText('');
+    onSearch('');
   };
 
+  /**
+   * Handles the change in text input.
+   * 
+   * Updates the text state and triggers the search callback.
+   * 
+   * @param {String} value - The new value of the text input.
+   */
   const onChangeText = value => {
     setText(value);
     onSearch(value);
   };
-  
-  const animatedWidth = useRef(
-    new Animated.Value(expand ? Dimensions.get('window').width * 0.9 : 40),
-  ).current;
 
+  /**
+   * Animates the width of the component based on the expansion state.
+   * 
+   * @param {boolean} expand - The target expansion state.
+   */
   const animateWidth = expand => {
     Animated.timing(animatedWidth, {
       toValue: expand ? Dimensions.get('window').width * 0.9 : 40,
@@ -58,8 +107,9 @@ const SmartSearchBox = ({placeHolder, onSearch, filterOptions, onChangeFilterOpt
     }).start();
   };
 
-  const inputRef = useRef(null);
-
+  /**
+   * Focuses the input field if the reference is available.
+   */
   const focusInput = () => {
     if (inputRef.current) {
       inputRef.current.focus();
