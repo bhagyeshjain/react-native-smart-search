@@ -35,7 +35,7 @@ or
 yarn add react-native-smart-search
 ```
 
-### #USAGE
+### USAGE
 
 ---
 
