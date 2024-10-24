@@ -9,7 +9,7 @@
  * @author Bhagyesh Jain [bhagyesh.chhabra@gmail.com]
  * @author Dilip Thakar [dilipthakkarnew@gmail.com]
  */
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -35,7 +35,8 @@ import cancel from "./assets/cancel.png";
  * 
  * @component
  * @param {string} placeholder - The placeholder text displayed in the input box.
- * @param {function(string): void} onSearch - Callback function that is triggered when a search is performed. 
+ * @param {function(string): void} onSearch - Callback function that is triggered when a search is performed.
+ * @param {function(): void} onClearText - Callback function that is triggered when a clear button is clicked.
  *   Receives the updated value of the input text.
  * @param {Object[]} filterOptions - An array of filter options to be displayed alongside the search box. 
  *   Each option should be an object with properties like `label` and `value`.
@@ -44,11 +45,11 @@ import cancel from "./assets/cancel.png";
  * @param {function(): void} onSubmit - Callback function that is triggered when the user presses enter or clicks the search button.
  * @param {boolean} [isExpanded=false] - Boolean indicating if the search box should be expanded by default.
  * @param {boolean} [isCollapsible=true] - Boolean indicating if the search box can be collapsed or not.
- * 
+ * @param {string} returnKeyType - Determines how the return key should look. On Android you can also use returnKeyLabel
  * @returns {JSX.Element} The rendered SmartSearchBox component.
  */
-const SmartSearchBox = ({placeHolder, onSearch, filterOptions, onChangeFilterOption, onSubmit, isExpanded, isCollapsible = true}) => {
-  
+const SmartSearchBox = ({ placeHolder, onSearch, filterOptions, returnKeyType, onChangeFilterOption, onSubmit, onClearText, isExpanded, isCollapsible = true }) => {
+
   // State to store the value of input box
   const [text, setText] = useState('');
 
@@ -80,6 +81,7 @@ const SmartSearchBox = ({placeHolder, onSearch, filterOptions, onChangeFilterOpt
   const clearInput = () => {
     setText('');
     onSearch('');
+    onClearText()
   };
 
   /**
@@ -117,18 +119,19 @@ const SmartSearchBox = ({placeHolder, onSearch, filterOptions, onChangeFilterOpt
   };
 
   return (
-    <Animated.View style={[styles.container, {width: animatedWidth}]}>
+    <Animated.View style={[styles.container, { width: animatedWidth }]}>
       <TouchableOpacity
         disabled={!isCollapsible}
         onPress={handleToggleExpand}
         style={styles.inputGroupContainer}>
-          <Image source={search} style={styles.icon} />
+        <Image source={search} style={styles.icon} />
       </TouchableOpacity>
       <TextInput
         ref={inputRef}
         style={styles.input}
         placeholder={placeHolder || "Search"}
         value={text}
+        returnKeyType={returnKeyType || 'default'}
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
       />
@@ -158,22 +161,19 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
-    margin: 20,
     height: 50,
-    width: 40,
+    width: "100%",
     overflow: 'hidden',
   },
   inputGroupContainer: {
-    backgroundColor: '#eee', 
-    height: '100%', 
-    width: 40, 
-    display: "flex", 
+    height: '100%',
+    width: 40,
+    display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
   icon: {
     marginRight: 0,
-    color: '#aaa',
     width: 20,
     height: 20,
   },
@@ -201,10 +201,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const FilterBox = ({items, onValueChange}) => {
+const FilterBox = ({ items, onValueChange }) => {
   const [selectedValue, setSelectedValue] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [position, setPosition] = useState({top: 0, right: 0});
+  const [position, setPosition] = useState({ top: 0, right: 0 });
   const selectBoxRef = useRef();
 
   const handleSelect = item => {
@@ -217,7 +217,7 @@ const FilterBox = ({items, onValueChange}) => {
     selectBoxRef.current.measure((fx, fy, width, height, px, py) => {
       const windowWidth = Dimensions.get('window').width;
       const rightMargin = windowWidth - px - width;
-      setPosition({top: py + height + 10, right: rightMargin});
+      setPosition({ top: py + height + 10, right: rightMargin });
       setModalVisible(true);
     });
   };
@@ -242,12 +242,12 @@ const FilterBox = ({items, onValueChange}) => {
           <View
             style={[
               filterBoxStyles.modalContainer,
-              {top: position.top, right: position.right},
+              { top: position.top, right: position.right },
             ]}>
             <FlatList
               data={items}
               keyExtractor={item => item.value.toString()}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
                     filterBoxStyles.item,
